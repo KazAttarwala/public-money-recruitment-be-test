@@ -12,6 +12,7 @@ namespace VacationRental.Api.Models
             set => _startIgnoreTime = value.Date;
         }
 
+        //can't we get rid of backing field?
         private DateTime _startIgnoreTime;
         public int Nights { get; set; }
     }

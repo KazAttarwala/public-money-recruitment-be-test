@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Models;
 
@@ -38,24 +39,9 @@ namespace VacationRental.Api.Controllers
             if (!_rentals.ContainsKey(model.RentalId))
                 throw new ApplicationException("Rental not found");
 
-            for (var i = 0; i < model.Nights; i++)
-            {
-                var count = 0;
-                foreach (var booking in _bookings.Values)
-                {
-                    if (booking.RentalId == model.RentalId
-                        && (booking.Start <= model.Start.Date && booking.Start.AddDays(booking.Nights) > model.Start.Date)
-                        || (booking.Start < model.Start.AddDays(model.Nights) && booking.Start.AddDays(booking.Nights) >= model.Start.AddDays(model.Nights))
-                        || (booking.Start > model.Start && booking.Start.AddDays(booking.Nights) < model.Start.AddDays(model.Nights)))
-                    {
-                        count++;
-                    }
-                }
-                if (count >= _rentals[model.RentalId].Units)
-                    throw new ApplicationException("Not available");
-            }
-
-
+            if (!CanMakeBooking(model.Start, model.Nights, _rentals[model.RentalId].PreparationTimeInDays, model.RentalId))
+                throw new ApplicationException("Not available");
+           
             var key = new ResourceIdViewModel { Id = _bookings.Keys.Count + 1 };
 
             _bookings.Add(key.Id, new BookingViewModel
@@ -67,6 +53,19 @@ namespace VacationRental.Api.Controllers
             });
 
             return key;
+        }
+
+        private bool CanMakeBooking(DateTime newBookingStart, int numOfNights, int preparationTime, int rentalId)
+        {
+            var rentalBookings = _bookings.Values.Where(booking => booking.RentalId == rentalId);
+
+            var conflictingBookings = rentalBookings.Where(booking =>
+            (booking.Start <= newBookingStart.Date && booking.Start.AddDays(booking.Nights + preparationTime) > newBookingStart.Date)
+                        || (booking.Start < newBookingStart.AddDays(numOfNights + preparationTime) && booking.Start.AddDays(booking.Nights + preparationTime)
+                            >= newBookingStart.AddDays(numOfNights + preparationTime))
+                        || (booking.Start > newBookingStart && booking.Start.AddDays(booking.Nights + preparationTime) < newBookingStart.AddDays(numOfNights + preparationTime)));
+
+            return conflictingBookings.Count() < _rentals[rentalId].Units;
         }
     }
 }
