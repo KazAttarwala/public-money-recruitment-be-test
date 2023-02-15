@@ -61,11 +61,11 @@ namespace VacationRental.Api.Controllers
 
             var conflictingBookings = rentalBookings.Where(booking =>
             (booking.Start <= newBookingStart.Date && booking.Start.AddDays(booking.Nights + preparationTime) > newBookingStart.Date)
-                        || (booking.Start < newBookingStart.AddDays(numOfNights + preparationTime) && booking.Start.AddDays(booking.Nights + preparationTime)
-                            >= newBookingStart.AddDays(numOfNights + preparationTime))
-                        || (booking.Start > newBookingStart && booking.Start.AddDays(booking.Nights + preparationTime) < newBookingStart.AddDays(numOfNights + preparationTime)));
+            || (booking.Start < newBookingStart.AddDays(numOfNights + preparationTime) && booking.Start.AddDays(booking.Nights + preparationTime)
+                >= newBookingStart.AddDays(numOfNights + preparationTime))
+            || (booking.Start > newBookingStart && booking.Start.AddDays(booking.Nights + preparationTime) < newBookingStart.AddDays(numOfNights + preparationTime)));
 
-            return conflictingBookings.Count() < _rentals[rentalId].Units;
+            return newBookingStart >= DateTime.Now.Date && conflictingBookings.Count() < _rentals[rentalId].Units;
         }
     }
 }
