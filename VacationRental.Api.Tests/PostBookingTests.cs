@@ -10,6 +10,7 @@ namespace VacationRental.Api.Tests
     public class PostBookingTests
     {
         private readonly HttpClient _client;
+        private readonly DateTime _currentDate = DateTime.Now;
 
         public PostBookingTests(IntegrationFixture fixture)
         {
@@ -36,7 +37,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 3,
-                Start = DateTime.Now.AddDays(2)
+                Start = _currentDate.AddDays(2)
             };
 
             ResourceIdViewModel postBookingResult;
@@ -59,7 +60,7 @@ namespace VacationRental.Api.Tests
 
         [Fact]
         public async Task GivenCompleteRequest_WhenBookingMultipleUnits_ThenAGetReturnsTheCreatedBookings()
-        {
+        { 
             var postRentalRequest = new RentalBindingModel
             {
                 Units = 2,
@@ -77,7 +78,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 3,
-                Start = DateTime.Now
+                Start = _currentDate
             };
 
             ResourceIdViewModel postBookingResult1;
@@ -91,7 +92,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 2,
-                Start = DateTime.Now
+                Start = _currentDate
             };
 
             ResourceIdViewModel postBookingResult2;
@@ -105,7 +106,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 2,
-                Start = DateTime.Now.AddDays(postRentalRequest.PreparationTimeInDays + 2)//DateTime.Now.AddDays(postRentalRequest.PreparationTimeInDays + 1)
+                Start = _currentDate.AddDays(postRentalRequest.PreparationTimeInDays + 2)//DateTime.Now.AddDays(postRentalRequest.PreparationTimeInDays + 1)
             };
 
             ResourceIdViewModel postBookingResult3;
@@ -164,7 +165,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 3,
-                Start = DateTime.Now
+                Start = _currentDate
             };
 
             using (var postBooking1Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking1Request))
@@ -176,7 +177,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 1,
-                Start = DateTime.Now.AddDays(1)
+                Start = _currentDate.AddDays(1)
             };
 
             await Assert.ThrowsAsync<ApplicationException>(async () =>
@@ -207,7 +208,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 3,
-                Start = DateTime.Now
+                Start = _currentDate
             };
 
             using (var postBooking1Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking1Request))
@@ -219,7 +220,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 1,
-                Start = DateTime.Now.AddDays(4)
+                Start = _currentDate.AddDays(4)
             };
 
             await Assert.ThrowsAsync<ApplicationException>(async () =>
