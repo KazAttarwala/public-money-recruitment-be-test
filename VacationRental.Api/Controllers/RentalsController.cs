@@ -26,6 +26,12 @@ namespace VacationRental.Api.Controllers
             return _rentals[rentalId];
         }
 
+        [HttpGet]
+        public ICollection<RentalViewModel> GetAll()
+        {
+            return _rentals.Values;
+        }
+
         [HttpPost]
         public ResourceIdViewModel Post(RentalBindingModel model)
         {
@@ -34,7 +40,8 @@ namespace VacationRental.Api.Controllers
             _rentals.Add(key.Id, new RentalViewModel
             {
                 Id = key.Id,
-                Units = model.Units
+                Units = model.Units,
+                PreparationTimeInDays = model.PreparationTimeInDays
             });
 
             return key;
