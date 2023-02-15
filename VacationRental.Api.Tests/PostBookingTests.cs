@@ -34,9 +34,9 @@ namespace VacationRental.Api.Tests
 
             var postBookingRequest = new BookingBindingModel
             {
-                 RentalId = postRentalResult.Id,
-                 Nights = 3,
-                 Start = new DateTime(2023, 02, 14)
+                RentalId = postRentalResult.Id,
+                Nights = 3,
+                Start = DateTime.Now.AddDays(2)
             };
 
             ResourceIdViewModel postBookingResult;
@@ -77,7 +77,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 3,
-                Start = new DateTime(2023, 02, 14)
+                Start = DateTime.Now
             };
 
             ResourceIdViewModel postBookingResult1;
@@ -91,7 +91,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 2,
-                Start = new DateTime(2023, 02, 14)
+                Start = DateTime.Now
             };
 
             ResourceIdViewModel postBookingResult2;
@@ -105,7 +105,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 2,
-                Start = new DateTime(2023, 02, 19)
+                Start = DateTime.Now.AddDays(postRentalRequest.PreparationTimeInDays + 2)//DateTime.Now.AddDays(postRentalRequest.PreparationTimeInDays + 1)
             };
 
             ResourceIdViewModel postBookingResult3;
@@ -164,7 +164,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 3,
-                Start = new DateTime(2023, 02, 16)
+                Start = DateTime.Now
             };
 
             using (var postBooking1Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking1Request))
@@ -176,7 +176,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 1,
-                Start = new DateTime(2023, 02, 17)
+                Start = DateTime.Now.AddDays(1)
             };
 
             await Assert.ThrowsAsync<ApplicationException>(async () =>
@@ -207,7 +207,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 3,
-                Start = new DateTime(2023, 02, 16)
+                Start = DateTime.Now
             };
 
             using (var postBooking1Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking1Request))
@@ -219,7 +219,7 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 1,
-                Start = new DateTime(2023, 02, 20)
+                Start = DateTime.Now.AddDays(4)
             };
 
             await Assert.ThrowsAsync<ApplicationException>(async () =>
