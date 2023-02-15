@@ -26,6 +26,12 @@ namespace VacationRental.Api.Controllers
             return _rentals[rentalId];
         }
 
+        [HttpGet]
+        public ICollection<RentalViewModel> GetAll()
+        {
+            return _rentals.Values;
+        }
+
         [HttpPost]
         public ResourceIdViewModel Post(RentalBindingModel model)
         {
